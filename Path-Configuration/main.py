@@ -1,6 +1,8 @@
 from fastapi import FastAPI, status
 from pydantic import BaseModel
 from enum import Enum
+from datetime import datetime
+from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
@@ -78,3 +80,17 @@ async def create_item(item: Item):
 @app.get("/elements/", tags=["items"], deprecated=True)
 async def read_elements():
     return [{"item_id": "Foo"}]
+
+# JSON Compatible Encoder
+fake_db = {}
+
+class Item1(BaseModel):
+    title: str
+    timestamp: datetime
+    description: str | None = None
+
+@app.put("/items6/{id}")
+def update_item(id: str, item: Item1):
+    json_compatible_item_data = jsonable_encoder(item)
+    fake_db[id] = json_compatible_item_data
+    return fake_db
