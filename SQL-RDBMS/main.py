@@ -10,7 +10,7 @@ class Hero(SQLModel, table=True):
     age: int | None = Field(default=None, index=True)
     secret_name: str
 
-#Create Engine
+#Create sqlite Engine
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
 
@@ -30,7 +30,6 @@ def get_session():
 SessionDep = Annotated[Session, Depends(get_session)]
 
 app = FastAPI()
-
 
 @app.on_event("startup")
 def on_startup():
